@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Vector3D.h"
+#include "Box.h"
 
-int main2() {
+int main() {
 	
 	Vector3D v1 = { 1 , 1 , 1 };
 	Vector3D v2 = { 1 , 2, 2 };
@@ -22,5 +23,17 @@ int main2() {
 	std::cout << "v1 + v2: "; Print(Sum(v1, v2));
 	std::cout << "v1 - v2: "; Print(Difference(v1, v2));
 
+	Vector3D box1VectorMin = { 0, 0, 0 };
+	Vector3D box1VectorMax = { 0, 4, 0 };
+
+	Vector3D box2VectorMin = { 0, 2, 0 };
+	Vector3D box2VectorMax = { 2, 6, 3 };
+
+	Box box1 = { box1VectorMin , box1VectorMax };
+	Box box2 = { box2VectorMin , box2VectorMax };
+
+	Print(GetCenter(box1));
+	Print(GetExtent(box2));
+	std::cout << IntersectBox(box1, box2);
 	return 0;
 }

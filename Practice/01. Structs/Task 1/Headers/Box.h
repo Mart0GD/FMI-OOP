@@ -8,5 +8,5 @@ struct Box {
 
 
 Vector3D GetCenter(const Box& box);
-Vector3D GetCenter(const Box& box);
+Vector3D GetExtent(const Box& box);
 bool IntersectBox(const Box& B1, const Box& B2);
