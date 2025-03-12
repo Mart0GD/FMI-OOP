@@ -25,6 +25,7 @@ struct Student {
 };
 
 void readStudentInfo(Student& student);
+void readStudentInfoFromFile(Student& student, char* fileName);
 void printStudentInfo(Student& student);
 void RandomStudent(Student& student);
 double AverageGrade(Student& student);
@@ -32,7 +33,7 @@ const char* getMajor(Major major);
 
 Student* getStudentWithGradesAbove(Student* students, double floor, size_t count);
 Student* getStudentsWithMaximumGrades(Student* students, size_t sudentsCount, size_t desiredStudents, Major major, size_t successfulExams);
-void searchForStudents(Student* students, char** critiria, size_t studentsCount, rsize_t criteriaCnt);
+void searchForStudents(Student* students, char** critiria, size_t studentsCount, size_t criteriaCnt);
 
 void freeStudent(Student& student);
 #endif

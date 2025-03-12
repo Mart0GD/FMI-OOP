@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
-#include "Helpers.hpp"
-#include "Address.hpp"
+#include "../Headers/Address.hpp"
+#include "../Headers/Helpers.hpp"
 
 #define MAX_ADDRESS_LEN 1024
 #pragma warning(disable : 4996)

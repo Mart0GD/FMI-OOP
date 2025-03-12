@@ -1,0 +1,7 @@
+This    is		  a   text          file.
+
+This    contains    to many    obsolete  intervals,
+
+tabs	 and new           lines.      
+	
+The goal    is     to  remove           them	.

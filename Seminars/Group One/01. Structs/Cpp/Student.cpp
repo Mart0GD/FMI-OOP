@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
-#include "Helpers.hpp"
-#include "Student.hpp"
+#include "../Headers/Helpers.hpp"
+#include "../Headers/Student.hpp"
 
 #pragma warning(disable : 4996)
 
