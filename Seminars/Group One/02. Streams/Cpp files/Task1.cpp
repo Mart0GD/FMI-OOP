@@ -29,7 +29,7 @@ void PrintStatistic(std::ifstream& file);
 void PrintHelpMenu();
 void revert(std::istream& stream);
 
-int main() {
+int main1() {
 
 	char command;
 	char* fileName = new(std::nothrow) char[MAX_FILE_NAME];
@@ -156,7 +156,7 @@ void PrintWordsCount(std::ifstream& file) {
 	std::cout << "Words count --> " << cnt << std::endl;;
 }
 
-void PrintRowsCount(std::ifstream& file) {
+void PrintRowsCount(std::ifstream& file)  {
 	revert(file);
 
 	int rows = 0;

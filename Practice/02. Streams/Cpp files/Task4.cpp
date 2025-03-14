@@ -1,5 +1,6 @@
 #include<iostream>
 #include<fstream>
+#include <limits>
 
 // Да се напише функция, която връща броя редове във файл.
 int main4() {
@@ -10,12 +11,11 @@ int main4() {
 	}
 
 	int lines = 0;
-	char c = 0;
-	while (!file.eof()){
-		file.get(c);
-		if (c == '\n') lines++;
+	while (file){
+		file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		if (!file) break;
+		lines++;
 	}
-	lines++;
 
 	std::cout << "The number of lines is --> " << lines;
 	file.close();

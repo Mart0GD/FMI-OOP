@@ -1,7 +1,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
-#include "Student.hpp"
+#include "../Headers/Student.hpp"
 
 #pragma warning(disable : 4996)
 

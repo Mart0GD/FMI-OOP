@@ -2,7 +2,7 @@
 #include<fstream>
 
 // Да се напише функция, която заменя всяко срещане на символ във файл с друг символ. Съдържанието на файла НЕ трябва да се зарежда в паметта.
-int main5() {
+int main() {
 	char replace = -1;
 	char replacer = -1;
 
@@ -17,11 +17,11 @@ int main5() {
 		std::cerr << "Cannot open file!";
 	}
 
-	char c = ' ';
-	while (file.peek() != EOF){
-		file.get(c);
+	char ch = ' ';
+	while (file){
+		file >> ch;
 
-		if (c == replace){
+		if (ch == replace){
 			file.seekg(-1, std::ios::cur);
 			file.put(replacer);
 			file.flush();

@@ -1,6 +1,6 @@
 #include<iostream>
 #include<fstream>
-#include "Student.hpp"
+#include "../Headers/Student.hpp"
 
 #define BUFFER 1028
 #pragma warning(disable : 4996)
@@ -20,7 +20,7 @@
 */
 int GetLines(std::ifstream& stream);
 
-int main() {
+int main6() {
 
 	char* fileName = new(std::nothrow) char[BUFFER];
 	std::cout << "Enter students file name --> ";
