@@ -12,5 +12,5 @@ struct Exam {
 };
 
 Exam* readExams(const char* fileName, int& size);
-void readExam(Exam& exam, std::ifstream& file);
+bool readExam(Exam & exam, std::ifstream & file);
 #endif

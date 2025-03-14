@@ -27,7 +27,7 @@ int main2() {
 	std::cin >> filesCount;
 
 	char** fileNames = CreateMatrix(filesCount, MAX_FILE_LETTERS_COUNT);
-	if (!fileNames) return 1;
+	if (!fileNames) return -1;
 
 	std::cin.ignore();
 	for (int i = 0; i < filesCount; i++){
@@ -96,8 +96,7 @@ bool PrintFromConsole(char* fileName) {
 		if (!currentLine) continue;
 		else if (strcmp(currentLine, END_KEYWORD) == 0) break;
 
-		file << currentLine;
-		file << '\n';
+		file << currentLine << '\n';
 	} while (true);
 
 	file.close();
@@ -117,7 +116,7 @@ bool CopyToFile(char* from, char* to) {
 	char* buffer = new(std::nothrow) char[READ_BUFFER];
 	if (!buffer) return false;
 
-	while (!input.eof()){
+	while (input){
 		input.getline(buffer, READ_BUFFER);
 		output << buffer << '\n';
 	}
@@ -149,7 +148,7 @@ bool CopyToLast(char** files, size_t filesCount) {
 			break;
 		}
 
-		while (!input.eof()){
+		while (input){
 			input.getline(buffer, READ_BUFFER);
 			output << buffer << '\n';
 		}

@@ -95,7 +95,7 @@ void fromConsole(char* fileName) {
 		return;
 	}
 
-	int* numbers = new(std::nothrow) int[1024];
+	int* numbers = new(std::nothrow) int[BUFFER];
 	if (!numbers) return;
 
 	std::cout << "Enter numbers --> ";
@@ -136,7 +136,7 @@ void copyToFile(const char* from, const char* to) {
 	}
 
 	int number = 0;
-	while (!input.eof()){
+	while (input){
 		input >> number;
 		output << number << ' ';
 	}
@@ -182,7 +182,7 @@ void copyAndSortAll(char** fileNames, size_t filesCount) {
 		}
 
 		int number = 0;
-		while (!file.eof()){
+		while (file){
 			file >> number;
 			if (!contains(numbers, number, cnt)) numbers[cnt++] = number;
 		}

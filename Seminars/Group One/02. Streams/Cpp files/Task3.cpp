@@ -28,7 +28,7 @@ int main3() {
 	int number = 0;
 	int lastNumber = INT_MIN;
 
-	while (!input.eof() && valid){
+	while (input && valid){
 		input >> number;
 		if (!input || number <= lastNumber) valid = false;
 		lastNumber = number;

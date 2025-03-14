@@ -1,25 +1,25 @@
-#include <iostream>
+Ôªø#include <iostream>
 #include <fstream>
 #include "Helpers.hpp"
 
 #define MAX_FILE_NAME 64
 /*
-«‡‰‡˜‡ 1.
-4 Õ‡ÔË¯ÂÚÂ ÔÓ„‡Ï‡, ÍÓˇÚÓ ÔÓÎÛ˜‡‚‡ ÓÚ ÍÓÏ‡Ì‰ÌËˇ Â‰ ‰‚‡ Ô‡‡ÏÂÚ˙‡ - Ô˙‚ËˇÚ Â ÍÓÏ‡Ì‰‡
-- Â‰ÌÓ ÓÚ: -c, -C , -w, -l, -L, -s ËÎË -h. ¬ÚÓËˇÚ Â ËÏÂ Ì‡ Ù‡ÈÎ.
-5 œÓ„‡Ï‡Ú‡ Úˇ·‚‡ ‰‡ ‡Ì‡ÎËÁË‡ ÔÓ‰‡‰ÂÌËˇ Ù‡ÈÎ ‚ ÚÂÍÒÚÓ‚ ÚÂÊËÏ ÒÔÓÂ‰ ÍÓÏ‡Ì‰‡Ú‡ Ë ‰‡
-ËÁ‚Â‰Â ËÌÙÓÏ‡ˆËˇ Ò˙ÓÚ‚ÂÚÌÓ Á‡:
-6 -c -> ¡ÓÈ Ì‡ ÒËÏ‚ÓÎËÚÂ ‚˙‚ Ù‡ÈÎ‡ (‚ÒË˜ÍË ÒËÏ‚ÓÎË).
-7 -C -> ¡ÓÈ Ì‡ ÌÂ-Ô‡ÁÌËÚÂ ÒËÏ‚ÓÎË ‚˙‚ Ù‡ÈÎ‡ - ÒËÏ‚ÓÎË Ò ÍÓ‰ ÔÓ-„ÓÎˇÏ ÓÚ 32 Ë ÔÓ-Ï‡Î˙Í
-ÓÚ 127.
-8 -w -> ¡ÓÈ Ì‡ ‰ÛÏËÚÂ ‚˙‚ Ù‡ÈÎ‡. ƒÛÏËÚÂ ÒÂ ‡Á‰ÂÎˇÚ Ò ÔÓËÁ‚ÓÎÂÌ ·ÓÈ Ô‡ÁÌË ÒËÏ‚ÓÎË.
-9 -l -> ¡ÓÈ Ì‡ Â‰Ó‚ÂÚÂ ‚˙‚ Ù‡ÈÎ‡.
-10 -L -> ¡ÓÈ Ì‡ ÌÂ-Ô‡ÁÌËÚÂ Â‰Ó‚Â ‚˙‚ Ù‡ÈÎ‡. “Â Úˇ·‚‡ ‰‡ Ò˙‰˙Ê‡Ú ÔÓÌÂ Â‰ËÌ ÒËÏ‚ÓÎ
-(·ÂÁ ÁÌ‡˜ÂÌËÂ Í‡Í˙‚).
-11 -s -> »Á‚ÂÊ‰‡ ÒÚ‡ÚËÒÚËÍ‡ Á‡ Ù‡ÈÎ‡. “ˇ ‚ÍÎ˛˜‚‡ ‚ÒˇÍ‡ ÓÚ „ÓÌËÚÂ ÏÂÚËÍË, ÌÓ Ò˙˘Ó Ë
-ÍÓÎÍÓ ÔÓˆÂÌÚ‡ ÓÚ Ó·˘Ëˇ ·ÓÈ ÒËÏ‚ÓÎË Â ÒÂ˘‡ÌÂÚÓ Ì‡ ‚ÒÂÍË ÌÂÔ‡ÁÂÌ ÒËÏ‚ÓÎ.
-12 -h -> »Á‚ÂÊ‰‡ ÔÓÏÓ˘ÌÓ Ò˙Ó·˘ÂÌËÂ Ì‡ ÂÍ‡Ì‡ (help message). ÕÂ ËÁÔÓÎÁ‚‡ ‚ÚÓËˇ
-Ô‡‡ÏÂÚ˙.
+–ó–∞–¥–∞—á–∞ 1.
+4 –ù–∞–ø–∏—à–µ—Ç–µ –ø—Ä–æ–≥—Ä–∞–º–∞, –∫–æ—è—Ç–æ –ø–æ–ª—É—á–∞–≤–∞ –æ—Ç –∫–æ–º–∞–Ω–¥–Ω–∏—è —Ä–µ–¥ –¥–≤–∞ –ø–∞—Ä–∞–º–µ—Ç—ä—Ä–∞ - –ø—ä—Ä–≤–∏—è—Ç –µ –∫–æ–º–∞–Ω–¥–∞
+- –µ–¥–Ω–æ –æ—Ç: -c, -C , -w, -l, -L, -s –∏–ª–∏ -h. –í—Ç–æ—Ä–∏—è—Ç –µ –∏–º–µ –Ω–∞ —Ñ–∞–π–ª.
+5 –ü—Ä–æ–≥—Ä–∞–º–∞—Ç–∞ —Ç—Ä—è–±–≤–∞ –¥–∞ –∞–Ω–∞–ª–∏–∑–∏—Ä–∞ –ø–æ–¥–∞–¥–µ–Ω–∏—è —Ñ–∞–π–ª –≤ —Ç–µ–∫—Å—Ç–æ–≤ —Ç–µ–∂–∏–º —Å–ø–æ—Ä–µ–¥ –∫–æ–º–∞–Ω–¥–∞—Ç–∞ –∏ –¥–∞
+–∏–∑–≤–µ–¥–µ –∏–Ω—Ñ–æ—Ä–º–∞—Ü–∏—è —Å—ä–æ—Ç–≤–µ—Ç–Ω–æ –∑–∞:
+6 -c -> –ë—Ä–æ–π –Ω–∞ —Å–∏–º–≤–æ–ª–∏—Ç–µ –≤—ä–≤ —Ñ–∞–π–ª–∞ (–≤—Å–∏—á–∫–∏ —Å–∏–º–≤–æ–ª–∏).
+7 -C -> –ë—Ä–æ–π –Ω–∞ –Ω–µ-–ø—Ä–∞–∑–Ω–∏—Ç–µ —Å–∏–º–≤–æ–ª–∏ –≤—ä–≤ —Ñ–∞–π–ª–∞ - —Å–∏–º–≤–æ–ª–∏ —Å –∫–æ–¥ –ø–æ-–≥–æ–ª—è–º –æ—Ç 32 –∏ –ø–æ-–º–∞–ª—ä–∫
+–æ—Ç 127.
+8 -w -> –ë—Ä–æ–π –Ω–∞ –¥—É–º–∏—Ç–µ –≤—ä–≤ —Ñ–∞–π–ª–∞. –î—É–º–∏—Ç–µ —Å–µ —Ä–∞–∑–¥–µ–ª—è—Ç —Å –ø—Ä–æ–∏–∑–≤–æ–ª–µ–Ω –±—Ä–æ–π –ø—Ä–∞–∑–Ω–∏ —Å–∏–º–≤–æ–ª–∏.
+9 -l -> –ë—Ä–æ–π –Ω–∞ —Ä–µ–¥–æ–≤–µ—Ç–µ –≤—ä–≤ —Ñ–∞–π–ª–∞.
+10 -L -> –ë—Ä–æ–π –Ω–∞ –Ω–µ-–ø—Ä–∞–∑–Ω–∏—Ç–µ —Ä–µ–¥–æ–≤–µ –≤—ä–≤ —Ñ–∞–π–ª–∞. –¢–µ —Ç—Ä—è–±–≤–∞ –¥–∞ —Å—ä–¥—ä—Ä–∂–∞—Ç –ø–æ–Ω–µ –µ–¥–∏–Ω —Å–∏–º–≤–æ–ª
+(–±–µ–∑ –∑–Ω–∞—á–µ–Ω–∏–µ –∫–∞–∫—ä–≤).
+11 -s -> –ò–∑–≤–µ–∂–¥–∞ —Å—Ç–∞—Ç–∏—Å—Ç–∏–∫–∞ –∑–∞ —Ñ–∞–π–ª–∞. –¢—è –≤–∫–ª—é—á–≤–∞ –≤—Å—è–∫–∞ –æ—Ç –≥–æ—Ä–Ω–∏—Ç–µ –º–µ—Ç—Ä–∏–∫–∏, –Ω–æ —Å—ä—â–æ –∏
+–∫–æ–ª–∫–æ –ø—Ä–æ—Ü–µ–Ω—Ç–∞ –æ—Ç –æ–±—â–∏—è –±—Ä–æ–π —Å–∏–º–≤–æ–ª–∏ –µ —Å—Ä–µ—â–∞–Ω–µ—Ç–æ –Ω–∞ –≤—Å–µ–∫–∏ –Ω–µ–ø—Ä–∞–∑–µ–Ω —Å–∏–º–≤–æ–ª.
+12 -h -> –ò–∑–≤–µ–∂–¥–∞ –ø–æ–º–æ—â–Ω–æ —Å—ä–æ–±—â–µ–Ω–∏–µ –Ω–∞ –µ–∫—Ä–∞–Ω–∞ (help message). –ù–µ –∏–∑–ø–æ–ª–∑–≤–∞ –≤—Ç–æ—Ä–∏—è
+–ø–∞—Ä–∞–º–µ—Ç—ä—Ä.
 */
 
 int getFileLength(std::ifstream& file);
@@ -31,7 +31,7 @@ void PrintStatistic(std::ifstream& file);
 void PrintHelpMenu();
 void revert(std::istream& stream);
 
-int main() {
+int main1() {
 
 	char command;
 	char* fileName = new(std::nothrow) char[MAX_FILE_NAME];
@@ -48,57 +48,57 @@ int main() {
 
 	std::ifstream file;
 	std::cout << "Enter file name --> ";
-	std::cin.ignore();
 	do
 	{
-		std::cin.getline(fileName, MAX_FILE_NAME);
+		std::cin >> fileName;
 
 		file.open(fileName);
 		if (!file.is_open()) {
 			std::cout << "File cannot be opened!\n";
-		} else break;
+		}
+		else break;
 	} while (true);
-	
+
 	bool done = true;
 	do
 	{
 		switch (command)
 		{
-			case 'c':
-				std::cout << "File length --> " << getFileLength(file) << std::endl;
-				done = true;
+		case 'c':
+			std::cout << "File length --> " << getFileLength(file) << std::endl;
+			done = true;
 			break;
 
-			case 'C':
-				std::cout << "NWS Characters --> " << getNWSCharactersCount(file) << std::endl;
-				done = true;
+		case 'C':
+			std::cout << "NWS Characters --> " << getNWSCharactersCount(file) << std::endl;
+			done = true;
 			break;
 
-			case 'w':
-				PrintWordsCount(file);
-				done = true;
+		case 'w':
+			PrintWordsCount(file);
+			done = true;
 			break;
 
-			case 'l':
-				PrintRowsCount(file);
-				done = true;
+		case 'l':
+			PrintRowsCount(file);
+			done = true;
 			break;
 
-			case 'L':
-				PrintNonEmptyRowsCount(file);
-				done = true;
+		case 'L':
+			PrintNonEmptyRowsCount(file);
+			done = true;
 			break;
 
-			case 's':
-				PrintStatistic(file);
-				done = false;
+		case 's':
+			PrintStatistic(file);
+			done = false;
 			break;
 
-			case 'h':
-				PrintHelpMenu();
-				done = false;
+		case 'h':
+			PrintHelpMenu();
+			done = false;
 			break;
-			
+
 		}
 
 		if (!done) {
@@ -120,32 +120,42 @@ bool IsWhiteSpace(char chr) {
 }
 
 int getFileLength(std::ifstream& file) {
-	file.clear();
-	file.seekg(0, std::ios::end);
 
-	return file.tellg();
+	int characters = 0;
+	char ch = ' ';
+	while (file){
+		file.get(ch);
+		if (!file) break;
+		characters++;
+	}
+
+	revert(file);
+	return characters;
 }
 
 int getNWSCharactersCount(std::ifstream& file) {
-	revert(file);
 
 	int cnt = 0;
-	while (!file.eof())
-		if (!IsWhiteSpace(file.get())) cnt++;
-
+	char ch = ' ';
+	while (file) {
+		ch = file.get();
+		if (!file) break;
+		if (!IsWhiteSpace(ch)) cnt++;
+	}
+		
+	revert(file);
 	return cnt;
 }
 
 void PrintWordsCount(std::ifstream& file) {
-	revert(file);
 
 	int cnt = 0;
 	bool wordStarted = false;
 	char c = ' ';
-	while (!file.eof()){
+	while (file) {
 		c = file.get();
 
-		if (wordStarted && IsWhiteSpace(c)){
+		if (wordStarted && IsWhiteSpace(c)) {
 			wordStarted = false;
 			cnt++;
 		}
@@ -155,32 +165,33 @@ void PrintWordsCount(std::ifstream& file) {
 	}
 	if (wordStarted) cnt++;
 
+	revert(file);
 	std::cout << "Words count --> " << cnt << std::endl;;
 }
 
-void PrintRowsCount(std::ifstream& file)  {
+void PrintRowsCount(std::ifstream& file) {
 	int rows = getLinesCount(file);
 
 	std::cout << "Rows count " << rows << std::endl;;
 }
 
 void PrintNonEmptyRowsCount(std::ifstream& file) {
-	revert(file);
 
 	int rows = 0;
 	int characters = 0;
 	char c = ' ';
-	while (file.peek() != EOF){
+	while (file.peek() != EOF) {
 		c = file.get();
-		if (c == '\n' && characters > 0){
+		if (c == '\n' && characters > 0) {
 			characters = 0;
 			rows++;
 			continue;
 		}
-		if(!IsWhiteSpace(c))characters++;
+		if (!IsWhiteSpace(c))characters++;
 	}
 	if (characters > 0) rows++;
-	
+
+	revert(file);
 	std::cout << "Non empty rows --> " << rows << std::endl;;
 }
 
@@ -192,7 +203,7 @@ void PrintStatistic(std::ifstream& file) {
 	PrintWordsCount(file);
 
 	PrintRowsCount(file);
-	
+
 	PrintNonEmptyRowsCount(file);
 
 	std::cout << "NWS Characters perecentage --> " << (nws / allCharacters) * 100.0 << std::endl;

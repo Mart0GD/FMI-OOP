@@ -21,7 +21,7 @@ char* toLower(const char* word, size_t len);
 void freeMat(char** matrix, size_t size);
 
 
-int main() {
+int main9() {
 	std::ifstream stream(HANGMAN_WORDS);
 	if (!stream.is_open()) {
 		std::cerr << "Cannot open file for reading!";
@@ -82,7 +82,7 @@ void play(char*& word, size_t len)
 	word = nullptr;
 	visual = nullptr;
 	wordCopy = nullptr;
-	if (ch == 'y') main();
+	if (ch == 'y') main9();
 	std::cout << "\nGoobye!";
 }
 

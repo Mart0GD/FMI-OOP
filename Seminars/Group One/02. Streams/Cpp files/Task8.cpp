@@ -41,13 +41,13 @@ int main8() {
 	while (!in.eof()){
 		valid = readDate(date1, in);
 		if (!valid) {
-			in.ignore(1024, '\n');
+			in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			out << '*' << '\n';
 			continue;
 		}
 		valid = readDate(date2, in);
 		if (!valid) {
-			in.ignore(1024, '\n');
+			in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			out << '*' << '\n';
 			continue;
 		}

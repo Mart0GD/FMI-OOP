@@ -20,7 +20,7 @@ int main6() {
 	int cnt = 0;
 	char current = ' ';
 	char prev = -1;
-	while (!in.eof()){
+	while (in){
 		in.get(current);
 		if (std::isspace(current)) {
 			if (!std::isspace(prev)) {
