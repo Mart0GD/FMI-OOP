@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include "Helpers.hpp"
+
 #define MAX_FILE_NAME 64
 /*
 Задача 1.
@@ -29,7 +31,7 @@ void PrintStatistic(std::ifstream& file);
 void PrintHelpMenu();
 void revert(std::istream& stream);
 
-int main1() {
+int main() {
 
 	char command;
 	char* fileName = new(std::nothrow) char[MAX_FILE_NAME];
@@ -157,15 +159,7 @@ void PrintWordsCount(std::ifstream& file) {
 }
 
 void PrintRowsCount(std::ifstream& file)  {
-	revert(file);
-
-	int rows = 0;
-	char ch = '\0';
-	while (!file.eof()){
-		file.get(ch);
-		if (ch == '\n') rows++;
-	}
-	if(ch) rows++;
+	int rows = getLinesCount(file);
 
 	std::cout << "Rows count " << rows << std::endl;;
 }
@@ -215,8 +209,4 @@ void PrintHelpMenu() {
 		<< "-h --> Help!\n";
 }
 
-void revert(std::istream& stream) {
-	stream.clear();
-	stream.seekg(0, std::ios::beg);
-}
 
