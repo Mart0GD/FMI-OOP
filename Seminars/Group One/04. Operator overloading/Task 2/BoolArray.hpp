@@ -1,108 +1,65 @@
 ﻿#pragma once
 #include <iostream>
-/*
-Клас BoolArray, който да реализира динамичен масив от bool (само стойности true/false). Всеки елемент трябва да заема един бит. За класа реализирайте следните оператори:
+#include "BoolProxy.hpp"
+#include "Iterator.hpp"
 
-оператор за присвояване от uint32_t, който заменя масива с битовото представяне на аргумента си.
-оператор за индексиране []. Трябва да позволява промяна на елемент;
-оператори за сравнение (еквивалентност и наредба). Използвайте лексикографска наредба;
-оператори + за добавяне на елемент в края на масива;
-оператори + за конкатенация на два масива;
-оператори за вход и изход в поток;
-оператор за преобразуване към uint32_t, който връща число, съставено от битове, равни на първите 32 булеви стойности от масива. Ако са по-малко, числото да се допълни с 0 (false). За класа реализирайте итератор.
-*/
+constexpr int32_t INITIAL_CAP{ 4 };
 
 class BoolProxy;
+class Iterator;
 
 class BoolArray {
 
-	friend std::ostream& operator<<(std::ostream& os, const BoolArray& arr);
-	friend std::istream& operator>>(std::istream& is, BoolArray& arr);
+	friend class BoolProxy;
+	friend class Iterator;
 
 public:
 
-	class BoolProxy {
-
-	public:
-
-		BoolProxy(BoolArray& owner, int32_t pos);
-
-		operator bool() const;
-
-		BoolProxy& operator = (bool what);
-		BoolProxy& operator = (const BoolProxy& other);
-
-	private:
-		int32_t pos;
-		BoolArray& owner;
-	};
-
-	class Iterator {
-
-		friend class BoolArray;
-
-	public:
-		Iterator operator++();
-		Iterator& operator++(int);
-
-		bool operator==(const Iterator& other) const;
-		bool operator!=(const Iterator& other) const;
-
-		bool operator*() const;
-		BoolArray::BoolProxy operator*();
-	private:
-		Iterator(BoolArray& owner, int32_t index) : owner{ owner }, index{ index } {};
-
-	private:
-		BoolArray& owner;
-		int32_t index;
-	};
-
-	Iterator begin();
-	Iterator end();
+	friend std::ostream& operator << (std::ostream& os, const BoolArray& arr);
+	friend std::istream& operator >> (std::istream& is, BoolArray& arr);
 
 public:
-
-	BoolArray(uint32_t cap = 4);
+	BoolArray();
 
 	BoolArray(const BoolArray& other);
 	BoolArray& operator=(const BoolArray& other);
 
-	BoolArray(BoolArray&& other) noexcept;
-	BoolArray& operator=(BoolArray&& other) noexcept;
+	BoolArray& operator=(uint32_t element);
 
-	~BoolArray() noexcept;
+	~BoolArray();
 
-	uint8_t* data() const { return _data; }
-	uint32_t allocated() const { return _allocated; }
-	uint32_t size() const { return _size; }
+	int32_t count() const { return _count; }
 
-	bool getBit(int position) const;
-	void setBit(int position, bool value);
+	Iterator begin() { return Iterator(data, 0); }
+	Iterator end() { return Iterator(data, _count); }
 
-	BoolArray operator+(int32_t element);
-	BoolArray& operator+=(int32_t element);
+public:
 
-	BoolArray operator+(const BoolArray& other);
+	BoolArray& operator+=(bool element);
 	BoolArray& operator+=(const BoolArray& other);
 
-	bool operator [] (int32_t index) const;
-	BoolProxy operator [] (int32_t index);
+	bool operator[](int32_t index) const;
+	BoolProxy operator[](int32_t index);
 
-	operator uint32_t() const;
+	operator uint32_t();
 
 private:
-	uint8_t* _data;
+	void clear();
+	bool resize();
 
-	uint32_t _allocated;
-	uint32_t _size;
+private:
+	uint8_t* data;
+	int32_t _count, cap;
 };
 
-bool operator < (const BoolArray& arr1, const BoolArray& arr2);
-bool operator <= (const BoolArray& arr1, const BoolArray& arr2);
+BoolArray operator+(const BoolArray& arr, bool element);
+BoolArray operator+(const BoolArray& arr1, const BoolArray& arr2);
 
-bool operator > (const BoolArray& arr1, const BoolArray& arr2);
-bool operator >= (const BoolArray& arr1, const BoolArray& arr2);
+bool operator<(const BoolArray& arr1, const BoolArray& arr2);
+bool operator<=(const BoolArray& arr1, const BoolArray& arr2);
 
-bool operator == (const BoolArray& arr1, const BoolArray& arr2);
-bool operator != (const BoolArray& arr1, const BoolArray& arr2);
+bool operator>(const BoolArray& arr1, const BoolArray& arr2);
+bool operator>=(const BoolArray& arr1, const BoolArray& arr2);
+
+bool operator==(const BoolArray& arr1, const BoolArray& arr2);
+bool operator!=(const BoolArray& arr1, const BoolArray& arr2);

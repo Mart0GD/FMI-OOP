@@ -1,41 +1,24 @@
 #include "DynamicArray.hpp"
 
 int main() {
+	DynamicArray arr;
 
-	try
-	{
-		DynamicArray da1(10);
-		DynamicArray da2(5);
-
-		da2 += 2;
-		da2 += 3;
-		da2 += 8;
-
-		da1 += 1;
-
-		da2 = da1 + 2;
-		da1 += da2;
-
-		da2 += 1;
-		da2 -= 1;
-
-		da2[1] = 1;
-
-		std::cin >> da1;
-		std::cout << da1;
-
-		/*da1 = da2;
-		std::cout << (da1 == da2);*/
-
-		for (int i : da1) {
-			std::cout << i;
-		}
-		std::cout << da1;
+	for (int i = 0; i < 31; i++){
+		arr += 3;
 	}
-	catch (const std::exception& e)
-	{
-		std::cout << e.what();
-	}
+	arr += 3; // resizing
+	
+	arr -= 3;
+	std::cout << arr[0];
 
-	return 0;
+	arr += 1;
+	std::cout << arr(1);
+	arr += 2; arr += 3;
+
+	std::cout << arr;
+	std::cin >> arr;
+
+	arr[0] = 2;
+	arr[0] = arr[0] - 1;
+	std::cout << arr[0];
 }

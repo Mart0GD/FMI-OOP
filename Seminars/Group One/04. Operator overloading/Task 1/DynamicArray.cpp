@@ -1,275 +1,217 @@
-﻿#include "DynamicArray.hpp"
+#include "DynamicArray.hpp"
 
-#pragma region Ctor 
-
-DynamicArray::DynamicArray(int32_t size)
-	:_size(size), _position(0), _data(nullptr)
+DynamicArray::DynamicArray()
+	: _count(0), cap(INITIAL_CAP)
 {
-	_data = new int32_t[size] {};
+	data = new int32_t[cap]{};
 }
 
 DynamicArray::DynamicArray(const DynamicArray& other)
-	: DynamicArray(other._size)
+	: _count(other._count), cap(other.cap)
 {
-	for (int i = 0; i < _size; i++) {
-		_data[i] = other._data[i];
-	}
-	_position = other._position;
+	data = new int32_t[cap]{};
+	for (int i = 0; i < _count; i++)
+		data[i] = other.data[i];
+
 }
 DynamicArray& DynamicArray::operator=(const DynamicArray& other) {
-	if (other._size > _size) throw std::invalid_argument("Larger size than anticipated!");
 	if (this == &other) return *this;
 
-	DynamicArray copy(other);
-	*this = std::move(copy);
+	if (cap < other.cap){
+		clear();
+		data = new int32_t[other.cap]{};
+	}
 
-	return *this;
-}
+	_count = other._count;
+	cap = other.cap;
 
-DynamicArray::DynamicArray(DynamicArray&& other) noexcept
-	: _size(other._size), _position(other._position)
-{
-	_data = other._data;
-
-	other._data = nullptr;
-	other._size = 0;
-	other._position = 0;
-}
-DynamicArray& DynamicArray::operator=(DynamicArray&& other) noexcept {
-	if (this == &other) return *this;
-
-	std::swap(_data, other._data);
-	_size = other._size;
-	_position = other._position;
+	for (int i = 0; i < other._count; i++){
+		data[i] = other.data[i];
+	}
 
 	return *this;
 }
 
 DynamicArray::~DynamicArray() {
-	delete[] _data; _data = nullptr;
+	clear();
 }
-#pragma endregion
 
-#pragma region Operators
+void DynamicArray::clear() {
+	delete[] data;
+}
+bool DynamicArray::resize() {
+	int32_t* old = data;
 
-// присвояване
-DynamicArray& DynamicArray::operator=(const int32_t* arr) {
-	if (!arr) return *this;
-	std::memcpy(_data, arr, _size);
+	data = new(std::nothrow) int32_t[cap * 2];
+	if (!data) {
+		data = old;
+		return false;
+	}
+
+	for (int i = 0; i < cap; i++){
+		data[i] = old[i];
+	}
+
+	delete[] old;
+	cap *= 2;
+	return true;
+}
+
+int32_t DynamicArray::operator[](int32_t index) const {
+	if (index < 0 || index >= cap) throw std::out_of_range("invalid index!");
+
+	return data[index];
+}
+int32_t& DynamicArray::operator[](int32_t index) {
+	if (index < 0 || index >= cap) throw std::out_of_range("invalid index!");
+
+	return data[index];
+}
+
+DynamicArray& DynamicArray::operator+=(int32_t element) {
+	if (_count + 1 >= cap) {
+		if (!resize()) {
+			clear();
+			throw std::bad_alloc();
+		}
+	}
+
+	data[_count++] = element;
 	return *this;
 }
-
-// adding int's
-DynamicArray DynamicArray::operator+(int32_t element) {
-	if (_position + 1 == _size) resize(_size);
-	DynamicArray copy(*this);
+DynamicArray operator+(const DynamicArray& arr, int32_t element) {
+	DynamicArray copy(arr);
 
 	copy += element;
 	return copy;
 }
-DynamicArray& DynamicArray::operator+=(int32_t element) {
-	if (_position + 1 == _size) resize(_size);
-	_data[_position++] = element;
+
+DynamicArray& DynamicArray::operator+=(const DynamicArray& arr) {
+	while (_count + arr._count >= cap) {
+		if (_count + 1 >= cap)
+			if (!resize()) {
+				clear();
+				throw std::bad_alloc();
+			}
+	}
+
+	for (int i = 0; i < arr._count; i++)
+	{
+		data[_count++] = arr[i];
+	}
 	return *this;
 }
+DynamicArray operator+(const DynamicArray& arr1, const DynamicArray& arr2) {
+	DynamicArray copy(arr1);
 
-//adding another Dynamic array
-DynamicArray DynamicArray::operator+(const DynamicArray& other) {
-	if (_position + (other._position + 1) == _size) {
-		resize(other._position + 1 < _size
-									? _size
-									: (other._position + 1) * 2);
-	}
-	DynamicArray copy(*this);
-
-	copy += other;
+	copy += arr2;
 	return copy;
 }
-DynamicArray& DynamicArray::operator+=(const DynamicArray& other) {
-	if (_position + (other._position + 1) == _size) {
-		resize(other._position + 1 < _size
-			? _size
-			: (other._position + 1) * 2);
-	}
 
-	for (int i = 0; i < other._position; i++) {
-		_data[_position++] = other._data[i];
-	}
-
-	return *this;
-}
-
-// removing all instances of element
-DynamicArray DynamicArray::operator-(int32_t element) {
-	if (this->operator()(element) == -1) return *this;
-	DynamicArray copy(*this);
-
-	copy -= element;
-	return copy;
-}
 DynamicArray& DynamicArray::operator-=(int32_t element) {
-	if (this->operator()(element) == -1) return *this;
 
-	int* indexes = new(std::nothrow) int[_position];
-	if (!indexes) throw std::bad_alloc();
+	int32_t* indexes = new int32_t[_count]; int32_t iter = 0;
+	for (int i = 0; i < _count; i++)
+		if (data[i] == element) indexes[iter++] = i;
 
-	int iter = 0;
-	for (int i = 0; i < _position; i++) {
-		if (_data[i] == element) indexes[iter++] = i;
-	}
-
-	for (int i = 0; i < iter; i++) {
-		for (int j = indexes[i] - i; j < _position; j++)
+	for (int i = 0; i < iter; i++)
+	{
+		for (int ii = indexes[i]; ii < _count - 1; ii++)
 		{
-			_data[j] = _data[j + 1];
+			data[ii] = data[ii + 1];
 		}
-		_position--;
+		data[_count - 1] = 0; // cleaning up
+
+		--_count;
+		for (int j = i + 1; j < iter; j++) indexes[j] -= 1;
 	}
 
 	delete[] indexes;
 	return *this;
 }
+DynamicArray operator-(const DynamicArray& arr, int32_t element) {
+	DynamicArray copy(arr);
 
-int32_t DynamicArray::operator[](int32_t index) const {
-	if (index < 0 || index >= _size) throw std::out_of_range("Index out of range!");
-
-	return _data[index];
-}
-int32_t& DynamicArray::operator[](int32_t index)  {
-	if (index < 0 || index >= _size) throw std::out_of_range("Index out of range!");
-	return _data[index];
+	copy -= element;
+	return copy;
 }
 
-// output and input
+bool operator<(const DynamicArray& a1, const DynamicArray& a2) {
+	int len1 = a1.count();
+	int len2 = a2.count();
+
+	int less = len1 < len2 ? len1 : len2;
+	for (int i = 0; i < less; i++){
+		if (a1[i] == a2[i]) continue;
+
+		if (a1[i] < a2[i]) return true;
+		return false;
+	}
+
+	return len1 < len2 ? true : false;
+}
+bool operator<=(const DynamicArray& a1, const DynamicArray& a2) {
+	return a1 < a2 || a1 == a2;
+}
+
+bool operator>(const DynamicArray& a1, const DynamicArray& a2) {
+	return !(a1 < a2);
+}
+bool operator>=(const DynamicArray& a1, const DynamicArray& a2) {
+	return a1 > a2 || a1 == a2;
+}
+
+bool operator==(const DynamicArray& a1, const DynamicArray& a2) {
+	if (a1.count() != a2.count()) return false;
+
+	int len = a1.count();
+	for (int i = 0; i < len; i++){
+		if (a1[i] != a2[i]) return false;
+	}
+}
+bool operator!=(const DynamicArray& a1, const DynamicArray& a2) {
+	return !(a1 == a2);
+}
 
 std::ostream& operator<<(std::ostream& os, const DynamicArray& arr) {
 	if (!os) throw std::invalid_argument("bad stream!");
 
-	for (int i = 0; i < arr.position(); i++){
-		os << arr[i] << ' ';
+	for (int i = 0; i < arr._count && os; i++){
+		os << arr[i];
+		if(i + 1 < arr._count) os << ' ';
 	}
-	os << std::endl;
+
+	std::cout << '\n';
+	return os;
 }
 std::istream& operator>>(std::istream& is, DynamicArray& arr) {
 	if (!is) throw std::invalid_argument("bad stream!");
 
-	char* buffer = new char[1024];
-	is.getline(buffer, 1024, '\n');
+	char buffer[1024];
+	is.getline(buffer, sizeof(buffer));
+	if (!is) throw std::invalid_argument("bad stream!");
 
-	char* start = buffer;
-	while (*buffer)
-	{
-		if (*buffer >= '0' && *buffer <= '9'){
-			int number = 0;
-			while (*buffer >= '0' && *buffer <= '9')
+	int iter = 0;
+	do{
+
+		if (buffer[iter] >= '0' && buffer[iter] < '9') {
+			int num = 0;
+			while (buffer[iter] >= '0' && buffer[iter] < '9')
 			{
-				number *= 10;
-				number += *buffer - '0';
-				buffer++;
+				num *= 10;
+				num += buffer[iter] - '0';
+				++iter;
 			}
-			arr += number;
-			continue;
+			arr[arr._count++] = num;
 		}
+	}while (buffer[iter] != '\0' && ++iter);
 
-		buffer++;
-	}
-
-	delete[] start;
+	return is;
 }
 
-// functional operator
-int32_t DynamicArray::operator()(int32_t element) const  {
-	for (int i = 0; i < _position; i++){
-		if (_data[i] == element) return i;
-	}
+int32_t DynamicArray::operator()(int32_t element) {
+	for (int i = 0; i < _count; i++)
+		if (data[i] == element) return i;
+
 	return -1;
-}
-
-// comparison
-
-bool operator < (const DynamicArray& da1, const DynamicArray& da2) {
-	int iter = 0;
-	while (iter < da1.size() && iter < da2.size())
-	{
-		int index = iter; ++iter;
-		if (da1[index] == da2[index]) continue;
-
-		int diff = da1[index] - da2[index];
-		return diff > 0 ? false : true;
-	}
-
-	return iter == da1.size() ? true : false;
-}
-bool operator <= (const DynamicArray& da1, const DynamicArray& da2) {
-	return da1 < da2 || da1 == da2;
-}
-
-bool operator > (const DynamicArray& da1, const DynamicArray& da2) {
-	return !(da1 < da2);
-}
-bool operator >= (const DynamicArray& da1, const DynamicArray& da2) {
-	return da1 > da2 || da1 == da2;
-}
-
-bool operator == (const DynamicArray& da1, const DynamicArray& da2) {
-	if (da1.size() != da2.size()) return false;
-
-	int iter = 0;
-	while (iter < da1.size()) {
-		if (da1[iter] != da2[iter]) return false;
-		++iter;
-	}
-	return true;
-}
-bool operator != (const DynamicArray& da1, const DynamicArray& da2) {
-	return !(da1 == da2);
-}
-
-#pragma endregion
-
-#pragma region Iterator
-
-DynamicArray::Iterator& DynamicArray::Iterator::operator ++ () {
-	++position;
-	return *this;
-}
-DynamicArray::Iterator DynamicArray::Iterator::operator ++ (int) {
-	DynamicArray::Iterator copy(*this);
-	++(*this);
-
-	return copy;
-}
-
-bool DynamicArray::Iterator::operator == (const Iterator& other) const {
-	return position == other.position;
-}
-bool DynamicArray::Iterator::operator != (const Iterator& other) const {
-	return !(*this == other);
-}
-
-int DynamicArray::Iterator::operator * () const {
-	return *position;
-}
-int& DynamicArray::Iterator::operator * () {
-	return *position;
-}
-
-#pragma endregion
-
-bool DynamicArray::resize(uint32_t amount) {
-	int32_t* old = _data;
-
-	_data = new(std::nothrow) int32_t[_size + amount];
-	if (!_data) {
-		_data = old;
-		return false;
-	}
-
-	for (int i = 0; i < _position; i++){
-		_data[i] = old[i];
-	}
-
-	_size += amount;
-	delete[] old; old = nullptr;
-	return true;
 }

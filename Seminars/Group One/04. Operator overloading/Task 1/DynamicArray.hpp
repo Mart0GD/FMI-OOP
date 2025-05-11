@@ -1,86 +1,53 @@
 ﻿#pragma once
 #include <iostream>
 
+constexpr int32_t INITIAL_CAP = 32;
+
 class DynamicArray {
 
+public:
+
 	friend std::ostream& operator<<(std::ostream& os, const DynamicArray& arr);
-	friend std::istream& operator>>(std::istream& os, DynamicArray& arr);
+	friend std::istream& operator>>(std::istream& is, DynamicArray& arr);
 
 public:
-	DynamicArray(int32_t size = 32);
+	DynamicArray();
 
 	DynamicArray(const DynamicArray& other);
 	DynamicArray& operator=(const DynamicArray& other);
 
-	DynamicArray(DynamicArray&& other) noexcept;
-	DynamicArray& operator=(DynamicArray&& other) noexcept;
+	~DynamicArray();
 
-	~DynamicArray() noexcept;
+	int32_t count() const { return _count; }
 
-	int32_t* data() const { return _data; }
-	int32_t position() const { return _position; }
-	int32_t size() const { return _size; }
+public:
 
-	DynamicArray operator+(int32_t element);
 	DynamicArray& operator+=(int32_t element);
-
-	DynamicArray operator+(const DynamicArray& other);
-	DynamicArray& operator+=(const DynamicArray& other);
-
-	DynamicArray operator-(int32_t element);
+	DynamicArray& operator+=(const DynamicArray& arr);
 	DynamicArray& operator-=(int32_t element);
 
-	DynamicArray& operator=(const int32_t* arr);
-
-	int32_t operator[](int32_t index) const;
+	int32_t operator[](int32_t index) const; 
 	int32_t& operator[](int32_t index);
-
-	int32_t operator()(int32_t element) const;
-
-
-	class Iterator {
-
-		friend class DynamicArray;
-
-	public:
-
-		Iterator& operator ++ ();
-		Iterator operator ++ (int);
-
-		bool operator == (const Iterator& other) const;
-		bool operator != (const Iterator& other) const;
-
-		int operator * () const;
-		int& operator * ();
-
-	private:
-		Iterator(int* pos) : position(pos) {}
-
-	private:
-		int* position;
-	};
-
-	Iterator begin() { return Iterator(_data); }
-	Iterator end() { return Iterator(_data + _position); }
+	int32_t operator()(int32_t index);
 
 private:
-	bool resize(uint32_t amount);
+	void clear();
+	bool resize();
 
 private:
-	int32_t* _data;
-	uint32_t _position;
-
-	int32_t _size;
+	int32_t* data;
+	int32_t _count, cap;
 };
 
-bool operator < (const DynamicArray& da1, const DynamicArray& da2);
-bool operator <= (const DynamicArray& da1, const DynamicArray& da2);
+bool operator<(const DynamicArray& a1, const DynamicArray& a2);
+bool operator<=(const DynamicArray& a1, const DynamicArray& a2);
 
-bool operator > (const DynamicArray& da1, const DynamicArray& da2);
-bool operator >= (const DynamicArray& da1, const DynamicArray& da2);
+bool operator>(const DynamicArray& a1, const DynamicArray& a2);
+bool operator>=(const DynamicArray& a1, const DynamicArray& a2);
 
-bool operator == (const DynamicArray& da1, const DynamicArray& da2);
-bool operator != (const DynamicArray& da1, const DynamicArray& da2);
+bool operator==(const DynamicArray& a1, const DynamicArray& a2);
+bool operator!=(const DynamicArray& a1, const DynamicArray& a2);
 
-
-
+DynamicArray operator+(const DynamicArray& arr, int32_t element);
+DynamicArray operator+(const DynamicArray& arr1, const DynamicArray& arr2);
+DynamicArray operator-(const DynamicArray& arr, int32_t element);
